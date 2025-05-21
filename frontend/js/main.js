@@ -20,6 +20,10 @@ const logoutLink = document.getElementById('logoutLink');
 const showRegisterLink = document.getElementById('showRegisterLink');
 const showLoginLink = document.getElementById('showLoginLink');
 
+// Quick Links
+const examScheduleLink = document.getElementById('examScheduleLink');
+const academicCalendarLink = document.getElementById('academicCalendarLink');
+
 // Navigation Functions
 function showSection(section) {
     [homeSection, loginSection, registerSection, dashboardSection].forEach(s => {
@@ -58,6 +62,20 @@ showRegisterLink.addEventListener('click', (e) => {
 showLoginLink.addEventListener('click', (e) => {
     e.preventDefault();
     showSection(loginSection);
+});
+
+// Event listener for exam schedule link
+examScheduleLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const examModal = new bootstrap.Modal(document.getElementById('examScheduleModal'));
+    examModal.show();
+});
+
+// Event listener for academic calendar link
+academicCalendarLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const calendarModal = new bootstrap.Modal(document.getElementById('academicCalendarModal'));
+    calendarModal.show();
 });
 
 // Authentication Functions
