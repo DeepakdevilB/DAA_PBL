@@ -215,8 +215,53 @@
                                     <label for="noticeDate" class="form-label">Date</label>
                                     <input type="date" class="form-control" id="noticeDate" required>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="noticePriority" class="form-label">Priority</label>
+                                    <select class="form-control" id="noticePriority" required>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                </div>
                                 <button type="submit" class="btn btn-primary">Submit Notice</button>
                                 <div id="noticeFormMsg" class="mt-2"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Issue Event Card (Admin Only) -->
+            <div class="row mt-4" id="issueEventCard" style="display: none;">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-calendar-plus me-2"></i>Issue Event</h3>
+                            <form id="issueEventForm">
+                                <div class="mb-3">
+                                    <label for="eventTitle" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="eventTitle" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="eventDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="eventDescription" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="eventDate" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="eventDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="eventType" class="form-label">Event Type</label>
+                                    <select class="form-control" id="eventType" required>
+                                        <option value="academic">Academic</option>
+                                        <option value="cultural">Cultural</option>
+                                        <option value="sports">Sports</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Event</button>
+                                <div id="eventFormMsg" class="mt-2"></div>
                             </form>
                         </div>
                     </div>

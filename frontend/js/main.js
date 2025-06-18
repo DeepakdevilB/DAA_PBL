@@ -178,6 +178,14 @@ function updateUIForLoggedInUser(user) {
     } else {
         issueNoticeCard.style.display = 'none';
     }
+
+    // Show Issue Event card only for admin
+    const issueEventCard = document.getElementById('issueEventCard');
+    if (user.role === 'admin') {
+        issueEventCard.style.display = '';
+    } else {
+        issueEventCard.style.display = 'none';
+    }
 }
 
 function updateUIForLoggedOutUser() {
@@ -224,6 +232,7 @@ if (issueNoticeForm) {
         const title = document.getElementById('noticeTitle').value;
         const description = document.getElementById('noticeDescription').value;
         const date = document.getElementById('noticeDate').value;
+        const priority = document.getElementById('noticePriority').value;
         const noticeFormMsg = document.getElementById('noticeFormMsg');
         noticeFormMsg.textContent = '';
         try {
@@ -238,7 +247,8 @@ if (issueNoticeForm) {
                     title,
                     description,
                     date,
-                    type: 'notice'
+                    type: 'notice',
+                    priority
                 })
             });
             const data = await response.json();
@@ -251,6 +261,47 @@ if (issueNoticeForm) {
         } catch (err) {
             noticeFormMsg.textContent = err.message;
             noticeFormMsg.style.color = 'red';
+        }
+    });
+}
+
+// Handle Issue Event form submission (admin only)
+const issueEventForm = document.getElementById('issueEventForm');
+if (issueEventForm) {
+    issueEventForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('eventTitle').value;
+        const description = document.getElementById('eventDescription').value;
+        const date = document.getElementById('eventDate').value;
+        const eventType = document.getElementById('eventType').value;
+        const eventFormMsg = document.getElementById('eventFormMsg');
+        eventFormMsg.textContent = '';
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/alerts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-auth-token': token
+                },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    date,
+                    type: 'event',
+                    eventType
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.msg || 'Failed to issue event');
+            }
+            eventFormMsg.textContent = 'Event issued successfully!';
+            eventFormMsg.style.color = 'green';
+            issueEventForm.reset();
+        } catch (err) {
+            eventFormMsg.textContent = err.message;
+            eventFormMsg.style.color = 'red';
         }
     });
 }

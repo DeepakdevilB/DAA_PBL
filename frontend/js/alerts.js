@@ -21,13 +21,25 @@ class AlertsHandler {
     // Load all alerts
     async loadAlerts() {
         try {
+            // Fetch exam alerts
             const response = await fetch(`${this.API_URL}/alerts/type/exam`, {
                 headers: {
                     'x-auth-token': this.token
                 }
             });
             const alerts = await response.json();
-            this.renderAlerts(alerts);
+
+            // Fetch urgent notices
+            const urgentNoticesResponse = await fetch(`${this.API_URL}/alerts/type/notice`, {
+                headers: {
+                    'x-auth-token': this.token
+                }
+            });
+            const urgentNotices = await urgentNoticesResponse.json();
+            const urgentOnly = urgentNotices.filter(n => n.priority === 'urgent' && n.status === 'active');
+
+            // Combine exam alerts and urgent notices
+            this.renderAlerts([...alerts, ...urgentOnly]);
         } catch (error) {
             console.error('Error loading alerts:', error);
         }
@@ -92,7 +104,7 @@ class AlertsHandler {
         this.noticesList.innerHTML = notices
             .filter(notice => notice.status === 'active')
             .map(notice => `
-                <div class="notice-item ${notice.status === 'active' ? 'unread' : ''}">
+                <div class="notice-item ${notice.priority ? notice.priority + '-priority' : ''} ${notice.status === 'active' ? 'unread' : ''}">
                     <div class="notice-header">
                         <h5 class="notice-title">${notice.title}</h5>
                         <span class="notice-date">${new Date(notice.date).toLocaleDateString()}</span>
@@ -138,6 +150,7 @@ class AlertsHandler {
             case 'high': return 'danger';
             case 'medium': return 'warning';
             case 'low': return 'info';
+            case 'urgent': return 'danger';
             default: return 'secondary';
         }
     }
