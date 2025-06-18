@@ -170,6 +170,14 @@ function updateUIForLoggedInUser(user) {
     document.getElementById('studentEmail').textContent = user.email;
     document.getElementById('studentIdDisplay').textContent = user.studentId;
     document.getElementById('courseDisplay').textContent = user.course;
+
+    // Show Issue Notice card only for admin
+    const issueNoticeCard = document.getElementById('issueNoticeCard');
+    if (user.role === 'admin') {
+        issueNoticeCard.style.display = '';
+    } else {
+        issueNoticeCard.style.display = 'none';
+    }
 }
 
 function updateUIForLoggedOutUser() {
@@ -206,6 +214,45 @@ function showSuccess(form, message) {
     }
     
     form.appendChild(successDiv);
+}
+
+// Handle Issue Notice form submission (admin only)
+const issueNoticeForm = document.getElementById('issueNoticeForm');
+if (issueNoticeForm) {
+    issueNoticeForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('noticeTitle').value;
+        const description = document.getElementById('noticeDescription').value;
+        const date = document.getElementById('noticeDate').value;
+        const noticeFormMsg = document.getElementById('noticeFormMsg');
+        noticeFormMsg.textContent = '';
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/alerts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-auth-token': token
+                },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    date,
+                    type: 'notice'
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.msg || 'Failed to issue notice');
+            }
+            noticeFormMsg.textContent = 'Notice issued successfully!';
+            noticeFormMsg.style.color = 'green';
+            issueNoticeForm.reset();
+        } catch (err) {
+            noticeFormMsg.textContent = err.message;
+            noticeFormMsg.style.color = 'red';
+        }
+    });
 }
 
 // Check for existing session on page load

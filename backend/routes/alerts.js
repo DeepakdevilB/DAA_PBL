@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Alert = require('../models/Alert');
 const auth = require('../middleware/auth');
+const { isAdmin } = require('../middleware/auth');
 
 // Get all alerts for a user
 router.get('/', auth, async (req, res) => {
@@ -41,7 +42,7 @@ router.get('/type/:type', auth, async (req, res) => {
 });
 
 // Create new alert (admin only)
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, isAdmin, async (req, res) => {
     try {
         const {
             title,
@@ -92,7 +93,7 @@ router.patch('/:id/status', auth, async (req, res) => {
 });
 
 // Delete alert (admin only)
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth, isAdmin, async (req, res) => {
     try {
         const alert = await Alert.findById(req.params.id);
         if (!alert) {

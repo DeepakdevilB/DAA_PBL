@@ -196,6 +196,33 @@
         <div id="dashboardSection" class="d-none">
             <h2><i class="fas fa-user-graduate me-2"></i>Welcome, <span id="studentName"></span>!</h2>
             
+            <!-- Issue Notice Card (Admin Only) -->
+            <div class="row mt-4" id="issueNoticeCard" style="display: none;">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-plus-circle me-2"></i>Issue Notice</h3>
+                            <form id="issueNoticeForm">
+                                <div class="mb-3">
+                                    <label for="noticeTitle" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="noticeTitle" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="noticeDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="noticeDescription" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="noticeDate" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="noticeDate" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Notice</button>
+                                <div id="noticeFormMsg" class="mt-2"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Alerts Section -->
             <div class="row mt-4">
                 <div class="col-md-8">
