@@ -3,6 +3,7 @@ const router = express.Router();
 const Alert = require('../models/Alert');
 const auth = require('../middleware/auth');
 const { isAdmin } = require('../middleware/auth');
+const axios = require('axios');
 
 // Get all alerts for a user
 router.get('/', auth, async (req, res) => {
@@ -105,6 +106,37 @@ router.delete('/:id', auth, isAdmin, async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server Error');
+    }
+});
+
+// Proxy chat message to Python chatbot server
+router.post('/chat', auth, async (req, res) => {
+    try {
+        const user = req.user;
+        const { message } = req.body;
+        if (!message) {
+            return res.status(400).json({ error: 'Message is required' });
+        }
+        const response = await axios.post('http://localhost:5005/chat', {
+            email: user.email,
+            message
+        });
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: 'Chatbot server error' });
+    }
+});
+
+// Get chat history for the logged-in user
+router.post('/history', auth, async (req, res) => {
+    try {
+        const user = req.user;
+        const response = await axios.post('http://localhost:5005/history', {
+            email: user.email
+        });
+        res.json(response.data);
+    } catch (err) {
+        res.status(500).json({ error: 'Chatbot server error' });
     }
 });
 

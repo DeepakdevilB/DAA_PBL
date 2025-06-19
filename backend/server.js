@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const alertRoutes = require('./routes/alerts');
+const chatbotRoutes = require('./routes/chatbot');
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ai_studen
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/alerts', alertRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {

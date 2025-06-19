@@ -42,6 +42,11 @@
                             <i class="fas fa-columns me-1"></i>Dashboard
                         </a>
                     </li>
+                    <li class="nav-item d-none" id="chatbotLink">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-robot me-1"></i>Chatbot
+                        </a>
+                    </li>
                     <li class="nav-item d-none" id="logoutLink">
                         <a class="nav-link" href="#">
                             <i class="fas fa-sign-out-alt me-1"></i>Logout
@@ -341,6 +346,25 @@
                             <p><i class="fas fa-envelope me-2"></i><strong>Email:</strong> <span id="studentEmail"></span></p>
                             <p><i class="fas fa-id-card me-2"></i><strong>Student ID:</strong> <span id="studentIdDisplay"></span></p>
                             <p><i class="fas fa-graduation-cap me-2"></i><strong>Course:</strong> <span id="courseDisplay"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chatbot Section -->
+        <div id="chatbotSection" class="d-none">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h3 class="card-title"><i class="fas fa-robot me-2"></i>AI Assistant Chatbot</h3>
+                            <div id="chatHistory" class="mb-3" style="height: 300px; overflow-y: auto; background: #f8f9fa; border-radius: 8px; padding: 1rem;"></div>
+                            <form id="chatForm" class="d-flex">
+                                <input type="text" class="form-control me-2" id="chatInput" placeholder="Type your message..." required autocomplete="off">
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+                            </form>
+                            <div id="chatError" class="mt-2 text-danger"></div>
                         </div>
                     </div>
                 </div>

@@ -24,12 +24,23 @@ const showLoginLink = document.getElementById('showLoginLink');
 const examScheduleLink = document.getElementById('examScheduleLink');
 const academicCalendarLink = document.getElementById('academicCalendarLink');
 
+// Chatbot links
+const chatbotLink = document.getElementById('chatbotLink');
+const chatbotSection = document.getElementById('chatbotSection');
+const chatForm = document.getElementById('chatForm');
+const chatInput = document.getElementById('chatInput');
+const chatHistory = document.getElementById('chatHistory');
+const chatError = document.getElementById('chatError');
+
 // Navigation Functions
 function showSection(section) {
-    [homeSection, loginSection, registerSection, dashboardSection].forEach(s => {
+    [homeSection, loginSection, registerSection, dashboardSection, chatbotSection].forEach(s => {
         s.classList.add('d-none');
     });
     section.classList.remove('d-none');
+    if (section === chatbotSection) {
+        loadChatHistory();
+    }
 }
 
 // Event Listeners for Navigation
@@ -76,6 +87,12 @@ academicCalendarLink.addEventListener('click', (e) => {
     e.preventDefault();
     const calendarModal = new bootstrap.Modal(document.getElementById('academicCalendarModal'));
     calendarModal.show();
+});
+
+// Event listener for chatbot link
+chatbotLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(chatbotSection);
 });
 
 // Authentication Functions
@@ -165,6 +182,7 @@ function updateUIForLoggedInUser(user) {
     registerLink.classList.add('d-none');
     dashboardLink.classList.remove('d-none');
     logoutLink.classList.remove('d-none');
+    chatbotLink.classList.remove('d-none');
 
     document.getElementById('studentName').textContent = user.name;
     document.getElementById('studentEmail').textContent = user.email;
@@ -193,6 +211,7 @@ function updateUIForLoggedOutUser() {
     registerLink.classList.remove('d-none');
     dashboardLink.classList.add('d-none');
     logoutLink.classList.add('d-none');
+    chatbotLink.classList.add('d-none');
 }
 
 // Helper Functions
@@ -302,6 +321,64 @@ if (issueEventForm) {
         } catch (err) {
             eventFormMsg.textContent = err.message;
             eventFormMsg.style.color = 'red';
+        }
+    });
+}
+
+// Chatbot logic
+async function sendMessageToChatbot(message) {
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:5000/api/chatbot/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': token
+        },
+        body: JSON.stringify({ message })
+    });
+    return response.json();
+}
+
+function renderChatHistory(history) {
+    chatHistory.innerHTML = '';
+    history.forEach(entry => {
+        chatHistory.innerHTML += `<div><strong>You:</strong> ${entry.user}</div>`;
+        chatHistory.innerHTML += `<div class="mb-2"><strong>Bot:</strong> ${entry.bot}</div>`;
+    });
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
+async function loadChatHistory() {
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:5000/api/chatbot/history', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': token
+        }
+    });
+    const data = await response.json();
+    if (data.history) {
+        renderChatHistory(data.history);
+    }
+}
+
+if (chatForm) {
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        chatError.textContent = '';
+        const message = chatInput.value.trim();
+        if (!message) return;
+        chatInput.value = '';
+        try {
+            const data = await sendMessageToChatbot(message);
+            if (data.error) {
+                chatError.textContent = data.error;
+            } else {
+                renderChatHistory(data.history);
+            }
+        } catch (err) {
+            chatError.textContent = 'Failed to contact chatbot.';
         }
     });
 }
